@@ -1,0 +1,30 @@
+Yugakure
+
+Welcome To Konohagakure
+
+Currently buying the following items:
+Animal Skin for 8V
+Bone for 15V
+Egg for 325V
+Glass for 2V
+Gold Coin for 4V
+Sandstone for 2V
+Stone Block for 7V
+Thinking Cap for 100,000V
+Banjo\t75V
+Bongos\t75V
+Celebration Card\t9,500V
+Cooked Haddock\t2V
+Cruise Card\t70,000V
+Dwarven Sack\t100V
+Furnace Card\t150V
+Gold Coin\t6V
+Jalapeno Pepper\t20V
+Magic Fish Card\t1,500V
+Mining Charm\t150V
+Necklace of Power\t50,000V
+Poisoned Fang\t20V
+Shark Card\t2,500V
+Striped Marlin\t20V
+Tuna\t4V
+Wagon Wheel\t175V
