@@ -1,6 +1,6 @@
 import csv, datetime, pyperclip
 
-# TODO: make a read database function to elimite extra code.
+# TODO: make a read database function to elimate extra code.
 #       Search by location
 #       Update to only show newest data for any given store, instead of all.
 #       Fuzzy and Strict Search, with quotes "" to do strict, allow store, guild, player, item or location results, specify buy or sell, maybe sort buy/sell.
