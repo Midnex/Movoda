@@ -4,19 +4,19 @@ import pyperclip
 
 def menuSystem():
     ''' A menu! '''
-    print('Choose a menu number:')
-    menuSelections = [
-        '1. Add: Finder Spell',
-        '2. Add: Store Parse',
-        '3. Add: Scan Auction',
-        '4. Search: Item',
-        '5. Search: Store (fuzzy)',
-        '6. Search: Location',
-        '7. Exit'
-    ]
+    print('Choose a menu selection:')
+    menuSelections = (
+        '  1. Add: Finder Spell',
+        '  2. Add: Store Parse',
+        '  3. Add: Scan Auction',
+        '  4. Search: Item',
+        '  5. Search: Store (fuzzy)',
+        '  6. Search: Location',
+        '  7. Exit'
+    )
     for item in menuSelections:
         print(item)
-    menuItem = input()
+    menuItem = input('> ')
 
     if menuItem == '1':  # Finder Spell Parse
         clipboard_finder_parse()
@@ -49,6 +49,7 @@ def menuSystem():
         menuSystem()
 
 def checkLocation(location):
+    ''' Pass a location to check if it is a valid game location.BrokenPipeError '''
     loc_list = ['Ashia', 'Awaru', 'Barin Plains', 'Baron Plains', 'Bulbas',
                 'Cardina', 'Cardina Valley', 'Cythe', 'Danycia', 'Droesar',
                 'Echtin', 'Eptile', 'Essrom', 'Ferboi', 'Galawi', 'Garando Mines',
