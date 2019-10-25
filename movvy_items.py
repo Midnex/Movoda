@@ -2,8 +2,9 @@ import csv
 from datetime import datetime
 import pyperclip
 
+ver = '0.6'
+
 def menuSystem():
-    ''' A menu! '''
     print('Choose a menu selection:')
     menuSelections = (
         '  1. Add: Finder Spell',
@@ -16,7 +17,7 @@ def menuSystem():
     )
     for item in menuSelections:
         print(item)
-    menuItem = input('> ')
+    menuItem = input('\n > ')
 
     if menuItem == '1':  # Finder Spell Parse
         clipboard_finder_parse()
@@ -27,17 +28,20 @@ def menuSystem():
     elif menuItem == '3':  # Auction Parse
         # auction_scan_parse()
         menuSystem()
-    elif menuItem == '4':  # Search by Item Name (fuzzy)
-        searchQuery = input('Item to find: ')
+    elif menuItem == '4':  # Search by Item Name (strict)
+        search = input('Item to find: ')
+        searchQuery = search.split(',')
         lookUp(searchQuery, 'item')
         menuSystem()
     elif menuItem == '5':  # search by Store
-        searchQuery = input('Store to check: ')
+        search = input('Store to check: ')
+        searchQuery = search.split(',')
         lookUp(searchQuery, 'store')
         menuSystem()
     elif menuItem == '6':  # search by Location
         while True:
-            searchQuery = input('Location to check: ')
+            search = input('Location to check: ')
+            searchQuery = search.split(',')
             if checkLocation(searchQuery) == True:
                 lookUp(searchQuery, 'location')
                 break
@@ -47,6 +51,7 @@ def menuSystem():
     else:
         print(f'\n {menuItem} is not a valid option.')
         menuSystem()
+
 
 def checkLocation(location):
     ''' Pass a location to check if it is a valid game location.BrokenPipeError '''
@@ -67,11 +72,13 @@ def checkLocation(location):
         print(f'"{location}" does not exist')
         return False
 
+
 def database_reader():
     '''Loads data base into a variable to be used else where'''
 
     database = open('itemDB.csv', 'r', encoding='utf-8')
     return csv.DictReader(database)
+
 
 def datebase_writer(line_to_write):
     '''writes to the data base using data in line_to_write'''
@@ -79,6 +86,7 @@ def datebase_writer(line_to_write):
     with open('itemDB.csv', 'a', encoding='utf-8', newline='') as itemDB:
         itemDB_writer = csv.writer(itemDB, quoting=csv.QUOTE_ALL)
         itemDB_writer.writerow(line_to_write)
+
 
 def checkBuildingType(line):
     '''Checks if the building type is a house, or if the item is being bought or sold'''
@@ -90,6 +98,7 @@ def checkBuildingType(line):
     else:
         return 'house'
 
+
 def getPrice(building_type, line):
     '''Gets the price of the item that is being bought or sold'''
     if building_type == 'buy':
@@ -97,6 +106,7 @@ def getPrice(building_type, line):
 
     if building_type == 'sell':
         return line.split(' is selling ')[1].split(' for ')[0].strip()
+
 
 def clipboard_finder_parse():
     '''Grabs the data in the clipboard that matches the finder spell data, and parses it to add to the database'''
@@ -117,12 +127,10 @@ def clipboard_finder_parse():
             building_clan = line.split('-')[1].split(' is ')[0].strip()
             building_type = checkBuildingType(line)
             building_item = getPrice(building_type, line)
-            building_item_price = line.split(' for ')[1].split(' in ')[
-                0].strip()[:-1]
+            building_item_price = line.split(' for ')[1].split(' in ')[0].strip()[:-1]
             building_name = line.split(' in ')[1].strip()
 
-            line_to_write = [stamp, building_location, building_clan,
-                             building_type, building_item, building_item_price, building_name]
+            line_to_write = [stamp, building_location, building_clan,building_type, building_item, building_item_price, building_name]
             datebase_writer(line_to_write)
             count += 1
         except:
@@ -133,8 +141,9 @@ def clipboard_finder_parse():
         print(f'Added {count} items at {stamp} while searching for {item}\n')
     pyperclip.copy('')
 
+
 def clipboard_store_parse():
-    '''Grabs the data in the clipboard that matches store data, and parses it to add to the data base'''
+    '''Grabs the data in the clipboard that matches store data, and parses it to add to the database'''
 
     while True:
             location = input('Location Name: ')
@@ -155,33 +164,35 @@ def clipboard_store_parse():
             building_name = line.replace('(Change Name)', '').strip()
         if count > 1:
             if buy_sep in line:
-                building_item = line.split(buy_sep)[0].replace(
-                    'Building Administration', '').strip()
-                building_price = line.split(buy_sep)[1].replace(
-                    'V', '').replace(',', '').strip()
+                building_item = line.split(buy_sep)[0].replace('Building Administration', '').strip()
+                building_price = line.split(buy_sep)[1].replace('V', '').replace(',', '').strip()
                 building_type = 'buy'
             if sell_sep in line:
-                building_item = line.split(sell_sep)[0].replace(
-                    'Building Administration', '').strip()
-                building_price = line.split(sell_sep)[1].replace(
-                    'V', '').replace(',', '').strip()
+                building_item = line.split(sell_sep)[0].replace('Building Administration', '').strip()
+                building_price = line.split(sell_sep)[1].replace('V', '').replace(',', '').strip()
                 building_type = 'sell'
             if building_type != '':
-                line_to_write = [stamp, location, clan, building_type,
-                                 building_item, building_price, building_name]
+                line_to_write = [stamp, location, clan, building_type, building_item, building_price, building_name]
                 datebase_writer(line_to_write)
         count += 1
     print(f'Added {count} items at {stamp} from {location} - {clan} - {building_name}\n')
+
 
 def auction_scan_parse():
     '''Once done will scan the auction house and new building type called auction'''
     return
 
+
 def lookUp(searchQuery, term):
     '''Looks up items based on item, store or location'''
-
-    searchQuery = searchQuery
+    if len(searchQuery) == 2:
+        queryItem, queryItemType = searchQuery
+        queryItem = queryItem.strip()
+        queryItemType = queryItemType.strip()
+    else:
+        queryItem = ''.join(searchQuery)
     resultsFound = 0
+    data = []
     for line in database_reader():
         timestamp = line['timestamp']
         itemType = line['type']
@@ -192,20 +203,30 @@ def lookUp(searchQuery, term):
         store = line['store']
         results = f'{timestamp} - {clan} is {itemType}ing {item} for {price}V in {location} at {store}.'
         if term == 'item':
-            if searchQuery.lower() == item.lower():
-                print(results)
+            if queryItem.lower() == item.lower() and queryItemType.lower() == itemType:
+                data.append(results)
+                resultsFound += 1
+            elif queryItem.lower() == item.lower() and queryItemType.lower() == 'both':
+                data.append(results)
                 resultsFound += 1
         if term == 'store':
-            if searchQuery.lower() in store.lower():
-                print(results)
+            if queryItem.lower() in store.lower():
+                data.append(results)
                 resultsFound += 1
         if term == 'location':
-            if searchQuery.lower() == location.lower():
-                print(results)
+            if queryItem.lower() == location.lower():
+                data.append(results)
                 resultsFound += 1
     if resultsFound == 0:
-        print(f'\n No result(s) found for "{searchQuery}" check spelling and try again.')
+        print(
+            f'\n No result(s) found for "{queryItem}" check spelling and try again.')
     else:
-        print(f'\n {resultsFound} result(s) found for {searchQuery}.\n')
+        printResults(data)
+        print(f'\n {resultsFound} result(s) found for {queryItem}.\n')
+
+
+def printResults(results):
+    for line in results:
+        print(line)
 
 menuSystem()

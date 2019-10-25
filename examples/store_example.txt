@@ -1,0 +1,37 @@
+[Shop] Midnighte Express (Change Name)
+
+
+Message Midnighte or minichibi if shop is full or out of Vessi.
+
+Currently buying the following items:
+Bunch of Spinach for 10V
+Bundle of Wheat for 19V
+Dough for 75V
+Feather for 15V
+Flour for 30V
+Gold Coin for 4V
+Hardwood Logs for 7V
+Harvesting Figurine for 1,000V
+Harvesting Ring for 25,000V
+Ivory for 15V
+Knee Pads for 1,000V
+Quainium Coin for 500V
+Sparkling Crown for 1V
+Stone Soup for 40V
+Tortilla for 30V
+Wellington Boots for 25,000V
+
+Building Administration	
+Gold Coin	6V	
+1
+Buy
+Prismatic Ring	45,000V	
+1
+Buy
+09:07:17 user[clan]: 
+Rules - History
+Disable Chat
+Spells
+Inventory
+LogoutUserName
+©2008 Ninja Squirrel Designs
