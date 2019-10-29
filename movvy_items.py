@@ -1,8 +1,13 @@
+import config
 import csv
-from datetime import datetime
 import pyperclip
+from datetime import datetime
+from pymongo import MongoClient
 
-ver = '0.6'
+client = MongoClient(config.credentials)
+db = client.movoda
+
+ver = '0.61'
 
 def menuSystem():
     print('Choose a menu selection:')
@@ -54,7 +59,7 @@ def menuSystem():
 
 
 def checkLocation(location):
-    ''' Pass a location to check if it is a valid game location.BrokenPipeError '''
+    ''' Pass a location to check if it is a valid game location.'''
     loc_list = ['Ashia', 'Awaru', 'Barin Plains', 'Baron Plains', 'Bulbas',
                 'Cardina', 'Cardina Valley', 'Cythe', 'Danycia', 'Droesar',
                 'Echtin', 'Eptile', 'Essrom', 'Ferboi', 'Galawi', 'Garando Mines',
@@ -229,4 +234,5 @@ def printResults(results):
     for line in results:
         print(line)
 
-menuSystem()
+if __name__ == '__main__':
+    menuSystem()
