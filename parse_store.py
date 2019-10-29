@@ -1,34 +1,21 @@
 # new store parser, test file
-# 2019.10.25
+# 2019.10.29
 
-import pyperclip, re
+import config
+import pyperclip
+import re
 from datetime import datetime
 from pymongo import MongoClient
-client = MongoClient('localhost', 27017)
-db = client.movoda
 
+client = MongoClient(config.credentials)
+db = client.movoda
 locations = db.locations
 
 loc_list = []
 for id in locations.find():
     loc_list.append(id['location'])
-        
-# loc_list = ['Ashia', 'Awaru', 'Barin Plains', 'Baron Plains', 'Bulbas',
-#             'Cardina', 'Cardina Valley', 'Cythe', 'Danycia', 'Droesar',
-#             'Echtin', 'Eptile', 'Essrom', 'Ferboi', 'Galawi', 'Garando Mines',
-#             'Giroc', 'Haldos Outpost', 'Hevalus Jungle', 'Hikori',
-#             'HMS Halieutika', 'Irotho', 'Jiroka', 'Kimdar',
-#             'Kolar Trading Post', 'Kudzum', 'Lake Essdar', 'Lake Trand',
-#             'Marossa', 'Martral', 'Moskim', 'Mount Pharos', 'Nalurn Woods',
-#             'Naton', 'Odude', 'Onnix', 'Pharos Peak', 'Ponat', 'Ponat Pier',
-#             'Port Barin', 'Port Baron', 'Port Schow', 'Radom Woods', 'Ravel',
-#             'Rissdra', 'Sepas', 'Therusia', 'Tropi', 'Unopos Mesa', 'Uzlea',
-#             'Yisildor Bay', 'Zhyack']
-
 
 clipboard = pyperclip.paste()
-# buyReg = '(^[a-zA-Z].*) for (.*)(V)'
-# sellReg = '(.*)\t(.*)(V)'
 regStr = r'(^[a-zA-Z].*) for (.*)(V)|(.*)\t(.*)(V)'
 
 building_location = ''
@@ -64,6 +51,12 @@ for line in clipboard.split('\r\n'):
                 building_item_price = building_item_price.replace(',','')
             data.append([stamp, building_location, building_clan, 'buy',building_item, building_item_price, building_name])
 
-print(f"Guild Compunds at {building_location}:\n{', '.join(guilds)}")
+print(f"Select a guild:")
+for i, guild in enumerate(guilds):
+    print(f'{i}. {guild}')
+selection = input('\n >')
+
+print('Importing...')
 for i in data:
-    print(i)
+    print(i, 'for', guilds[selection])
+print('Finished Importing\nExiting...')
