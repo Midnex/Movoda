@@ -1,37 +1,115 @@
-[Shop] Midnighte Express (Change Name)
-
-
-Message Midnighte or minichibi if shop is full or out of Vessi.
-
+0 HaLongBay 0 shop
 Currently buying the following items:
-Bunch of Spinach for 10V
-Bundle of Wheat for 19V
 Dough for 75V
-Feather for 15V
-Flour for 30V
-Gold Coin for 4V
-Hardwood Logs for 7V
-Harvesting Figurine for 1,000V
-Harvesting Ring for 25,000V
-Ivory for 15V
-Knee Pads for 1,000V
-Quainium Coin for 500V
-Sparkling Crown for 1V
-Stone Soup for 40V
-Tortilla for 30V
-Wellington Boots for 25,000V
-
-Building Administration	
-Gold Coin	6V	
-1
-Buy
-Prismatic Ring	45,000V	
-1
-Buy
-09:07:17 user[clan]: 
+Iron Ore for 6V
+Seafood Platter for 50V
+Aelosatia logged in
+21:07:36 The Dude[7sins]: salutations
+GanosLal logged out
+Elenwe logged in
+Ebisu logged out
+Gruntsalot has returned from away
+minichibi has returned from away
+22:12:44 Freya[^V^]: Quiet night
+22:13:10 Rollo[Avalon]: lockhim up!
+22:14:37 Ebisu[Elysium]: :ninja:
+22:19:38 seren[ΩMNI]: goodnight all speak on Friday! :hugs:
+Hondajdmla logged in
+Gruntsalot has returned from away
+Midnighte has returned from away
+minichibi has returned from away
+Congratulations to Ebisu for reaching Combat level 70
+23:00:51 Jibba [Jabba]: :grats:
+BravoZulu logged in
+spacecookie logged in
+23:09:55 Dragonlover[Paridise]: :grats:
+23:15:06 Aversin[Ashia]: :claps:
+23:15:22 spacecookie[ΩMNI]: :grats:
+Elenwe logged in
+Shaniegirl logged in
+mikeyii logged in
+Schubert logged in
 Rules - History
 Disable Chat
 Spells
 Inventory
-LogoutUserName
+Beast of Burden (Lvl 24 - 14 MP)
+592 casts left to level
+Chain Lightning (lvl 5 - 14 MP)
+24 casts left to level
+Chief Crafter (Lvl 10 - 9 MP)
+40 casts left to level
+Chopper (Lvl 21 - 9 MP)
+314 casts left to level
+Digger (Lvl 28 - 9 MP)
+582 casts left to level
+Eagle Eye (Lvl 12 - 9 MP)
+145 casts left to level
+Excite (Lvl 20 - 9 MP)
+50 casts left to level
+Finder (Lvl 19 - 19 MP)
+167 casts left to level
+Fisher (Lvl 27 - 9 MP)
+1,495 casts left to level
+Gatherer (Lvl 27 - 9 MP)
+213 casts left to level
+Hands of Steel (Lvl 14 - 14 MP)
+38 casts left to level
+Heal (Lvl 8 - 5 MP)
+7 casts left to level
+Hot Hands (Lvl 27 - 9 MP)
+951 casts left to level
+Item Shield (Lvl 12 - 9 MP)
+128 casts left to level
+Master Chef (Lvl 20 - 9 MP)
+277 casts left to level
+Meditate (Lvl 39 - 5 MP)
+2,299 casts left to level
+Nimble Fingers (Lvl 29 - 14 MP)
+336 casts left to level
+Restore (Lvl 12 - 7 MP)
+240 casts left to level
+Shock (lvl 10 - 7 MP)
+158 casts left to level
+Super Smith (Lvl 3 - 9 MP)
+17 casts left to level
+Teleport (Lvl 6 - 24 MP)
+19 casts left to level
+Tree Whisperer (Lvl 8 - 19 MP)
+40 casts left to level
+Naton
+Deep Mines
+Mine Iron Ore
+Mine Mythral Ore
+Stone Quarry
+7sins Guild Compound
+~Arietta Guild Compound
+~WB~ Guild Compound
+Cards: 5
+Combat: 50
+Construction: 29
+Cooking: 63
+Crafting: 48
+Fishing: 48
+Harvesting: 76
+Magic: 44
+Mining: 53
+Smithing: 11
+Speed: 44
+Trading: 21
+Woodcutting: 34
+Support Movoda
+Settings
+Equipment
+Guild Stuff
+Quest Log
+Manual / Forum
+LogoutMidnighte (1)
+Odtoni
+189,729 Vessi
+35,447,675 Exp
+Lvl 76 (105,429 Left)
+HP: 129/129
+MP: 40/134
+MessagesTue, 29 Oct 2019 23:22:54
 ©2008 Ninja Squirrel Designs
