@@ -12,7 +12,8 @@ db = client.movoda
 locations = db.locations
 
 loc_list = []
-for id in locations.find():
+for id in locations.find({}):
+    print(id)
     loc_list.append(id['location'])
 
 clipboard = pyperclip.paste()
@@ -33,7 +34,13 @@ for count, line in enumerate(clipboard.split('\r\n')):
             continue
     if ' Guild Compound' in line:
         guilds.append(line.replace(' Guild Compound',''))
-        
+
+print(f"Select a guild:")
+for i, guild in enumerate(guilds, start=1):
+    print(f'{i}. {guild}')
+selection = int(input('\n > ')) - 1
+building_clan = guilds[selection]
+
 for line in clipboard.split('\r\n'):
     stamp = datetime.now().strftime("%m/%d/%y %H:%M:%S")
     match = re.match(regStr, line)
@@ -51,12 +58,7 @@ for line in clipboard.split('\r\n'):
                 building_item_price = building_item_price.replace(',','')
             data.append([stamp, building_location, building_clan, 'buy',building_item, building_item_price, building_name])
 
-print(f"Select a guild:")
-for i, guild in enumerate(guilds):
-    print(f'{i}. {guild}')
-selection = input('\n >')
-
 print('Importing...')
 for i in data:
-    print(i, 'for', guilds[selection])
+    print(i)
 print('Finished Importing\nExiting...')
