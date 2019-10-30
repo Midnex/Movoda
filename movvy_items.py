@@ -46,7 +46,7 @@ def menuSystem():
     elif menuItem == '6':  # search by Location
         while True:
             search = input('Location to check: ')
-            searchQuery = search.split(',')
+            searchQuery = search.split(',')[0]
             if checkLocation(searchQuery) == True:
                 lookUp(searchQuery, 'location')
                 break
@@ -74,7 +74,7 @@ def checkLocation(location):
     if location in loc_list:
         return True
     else:
-        print(f'"{location}" does not exist')
+        print(f'{location} does not exist.')
         return False
 
 
@@ -236,3 +236,5 @@ def printResults(results):
 
 if __name__ == '__main__':
     menuSystem()
+
+client.close()

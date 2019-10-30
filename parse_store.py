@@ -13,7 +13,6 @@ locations = db.locations
 
 loc_list = []
 for id in locations.find({}):
-    print(id)
     loc_list.append(id['location'])
 
 clipboard = pyperclip.paste()
@@ -62,3 +61,4 @@ print('Importing...')
 for i in data:
     print(i)
 print('Finished Importing\nExiting...')
+client.close()
