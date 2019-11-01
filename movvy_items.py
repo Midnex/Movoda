@@ -2,10 +2,6 @@ import config
 import csv
 import pyperclip
 from datetime import datetime
-from pymongo import MongoClient
-
-client = MongoClient(config.credentials)
-db = client.movoda
 
 ver = '0.61'
 
