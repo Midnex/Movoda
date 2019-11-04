@@ -2,6 +2,11 @@ import config
 import csv
 import pyperclip
 from datetime import datetime
+from pymongo import MongoClient
+
+client = MongoClient(config.credentials)
+db = client.movoda
+prices = db.prices
 
 ver = '0.61'
 
@@ -88,6 +93,20 @@ def datebase_writer(line_to_write):
         itemDB_writer = csv.writer(itemDB, quoting=csv.QUOTE_ALL)
         itemDB_writer.writerow(line_to_write)
 
+def database_writer_new(line_to_write):
+    '''writes to mongodb using data in line_to_write (list)'''
+    timestamp, location, clan, type, item, price, store = line_to_write
+    data = {
+        'timestamp': timestamp,
+        'location': location,
+        'clan': clan,
+        'type': type,
+        'item': item,
+        'price': price,
+        'store': store
+    }
+    result = prices.insert_one(data)
+
 
 def checkBuildingType(line):
     '''Checks if the building type is a house, or if the item is being bought or sold'''
@@ -132,7 +151,7 @@ def clipboard_finder_parse():
             building_name = line.split(' in ')[1].strip()
 
             line_to_write = [stamp, building_location, building_clan,building_type, building_item, building_item_price, building_name]
-            datebase_writer(line_to_write)
+            database_writer_new(line_to_write)
             count += 1
         except:
             pass
@@ -174,7 +193,7 @@ def clipboard_store_parse():
                 building_type = 'sell'
             if building_type != '':
                 line_to_write = [stamp, location, clan, building_type, building_item, building_price, building_name]
-                datebase_writer(line_to_write)
+                database_writer_new(line_to_write)
         count += 1
     print(f'Added {count} items at {stamp} from {location} - {clan} - {building_name}\n')
 
