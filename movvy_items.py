@@ -1,26 +1,23 @@
-import config
 import csv
 import pyperclip
+import os.path
+import socket
 from datetime import datetime
 from tabulate import tabulate
 from pymongo import MongoClient
 
-client = MongoClient(config.credentials)
-db = client.movoda
-prices = db.prices
-locations = db.locations
-
-ver = '0.62'
+ver = '0.63'
 
 def menuSystem():
+    print('Movoda Utils:')
     print('Choose a menu selection:')
     menuSelections = (
         'Add: Finder Spell',
         'Add: Store Parse',
         'Add: Scan Auction',
-        'Search: Item',
+        'Search: Item (Strict)',
         'Search: Store (Strict)',
-        'Search: Location (Broke)',
+        'Search: Location (Strict)',
         'Exit'
     )
     for num, item in enumerate(menuSelections, start=1):
@@ -56,6 +53,8 @@ def menuSystem():
         menuSystem()
     elif menuItem == '7':  # Exit
         print('Exiting...')
+    elif menuItem == 'loc':
+        print(locations.find({}))
     else:
         print(f'\n {menuItem} is not a valid option.')
         menuSystem()
@@ -101,9 +100,8 @@ def database_reader_new(searchQuery, queryItemType, term):
 
 def database_writer_new(line_to_write):
     '''writes to mongodb using data in line_to_write (list)'''
-
-    timestamp, location, clan, queryItemType, item, price, store = line_to_write
-    data = {'timestamp': timestamp,'location': location,'clan': clan,'type': queryItemType,'item': item,'price': price,'store': store}
+    timestamp, location, clan, queryItemType, item, price, store, login, hostname = line_to_write
+    data = {'timestamp': timestamp,'location': location,'clan': clan,'type': queryItemType,'item': item,'price': price,'store': store, 'login':config.login, 'source':hostname}
     result = prices.insert_one(data)
 
 
@@ -147,8 +145,7 @@ def clipboard_finder_parse():
             building_item = getPrice(building_type, line)
             building_item_price = line.split(' for ')[1].split(' in ')[0].strip()[:-1]
             building_name = line.split(' in ')[1].strip()
-
-            line_to_write = [stamp, building_location, building_clan,building_type, building_item, building_item_price, building_name]
+            line_to_write = [stamp, building_location, building_clan,building_type, building_item, building_item_price, building_name, config.login, hostname]
             database_writer_new(line_to_write)
             count += 1
         except:
@@ -190,7 +187,7 @@ def clipboard_store_parse():
                 building_price = line.split(sell_sep)[1].replace('V', '').replace(',', '').strip()
                 building_type = 'sell'
             if building_type != '':
-                line_to_write = [stamp, location, clan, building_type, building_item, building_price, building_name]
+                line_to_write = [stamp, location, clan, building_type, building_item, building_price, building_name, config.login, hostname]
                 database_writer_new(line_to_write)
         count += 1
     print(f'Added {count} items at {stamp} from {location} - {clan} - {building_name}\n')
@@ -214,6 +211,29 @@ def lookUp(searchQuery, term):
         print(tabulate(sorted_data, headers=['timestamp', 'location', 'clan', 'type', 'item', 'price', 'store'], tablefmt='psql'),'\n')
 
 if __name__ == '__main__':
-    menuSystem()
-
-client.close()
+    item = False
+    hostname = socket.gethostname()
+    if os.path.isfile('config.py'):
+        import config
+        try:
+            print(f"Attempting to login as {config.login} on {hostname}")
+            client = MongoClient(config.credentials)
+            db = client.movoda
+            prices = db.prices
+            locations = db.locations
+            users = db.users
+            for item in users.find({}): # just brain farting... 
+                item = True
+        except Exception as e:
+            print('Credientials invalid...')
+            os.remove('config.py')
+    else:
+        print('Missing Credientials.')
+        user = input('Enter username: ')
+        password = input('Enter password: ')
+        with open('config.py', 'w') as f:
+            loginCreds = f'credentials = "mongodb://{user}:{password}@cluster0-shard-00-00-ltipa.gcp.mongodb.net:27017/movoda?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority"\nlogin = "{user}"'
+            f.write(loginCreds)
+        print('Restart to login')
+    if item == True:
+        menuSystem()
