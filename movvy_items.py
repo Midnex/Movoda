@@ -1,12 +1,13 @@
 import csv
-import pyperclip
+import json
 import os.path
+import pyperclip
 import socket
 from datetime import datetime
 from tabulate import tabulate
 from pymongo import MongoClient
 
-ver = '0.63'
+ver = '0.64' #  TODO Add version to dabase and build a check, force upgrade.
 
 def menuSystem():
     print('Movoda Utils:')
@@ -60,6 +61,7 @@ def menuSystem():
         menuSystem()
 
 def checkLocation_new(location):
+    ''' checks location versus database '''
     for i in locations.find({'name':location}):
         if i['name'] == location:
             return True
@@ -68,6 +70,7 @@ def checkLocation_new(location):
             return False
 
 def database_reader_new(searchQuery, queryItemType, term):
+    ''' searchQuery, queryItemType, term, all strings to find data from database '''
     data = []
     searchQuery = ''.join(searchQuery)
     if term == 'store':
@@ -86,7 +89,6 @@ def database_reader_new(searchQuery, queryItemType, term):
         for i in prices.find({'location': searchQuery}):
             table = i['timestamp'], i['location'], i['clan'], i['type'], i['item'], int(i['price']), i['store']
             data.append(table)
-
     if len(data) == 0:
         print(f"No result found for {searchQuery}.\n")
     else:
@@ -107,7 +109,6 @@ def database_writer_new(line_to_write):
 
 def checkBuildingType(line):
     '''Checks if the building type is a house, or if the item is being bought or sold'''
-
     if ' is buying ' in line:
         return 'buy'
     elif ' is selling ' in line:
@@ -127,7 +128,6 @@ def getPrice(building_type, line):
 
 def clipboard_finder_parse():
     '''Grabs the data in the clipboard that matches the finder spell data, and parses it to add to the database'''
-
     item = ''
     line_to_write = ''
     count = 0
@@ -210,30 +210,50 @@ def lookUp(searchQuery, term):
     if sorted_data != None:
         print(tabulate(sorted_data, headers=['timestamp', 'location', 'clan', 'type', 'item', 'price', 'store'], tablefmt='psql'),'\n')
 
+
+#   TODO Add file Encryption.
+def write_json(user,password):
+    ''' Pass username and password '''
+    data = {}
+    data['credentials'] = []
+    data['credentials'].append({
+        'login': user,
+        'uri': f'mongodb://{user}:{password}@cluster0-shard-00-00-ltipa.gcp.mongodb.net:27017/movoda?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority'})
+    with open('data.json','w') as f:
+        json.dump(data,f)
+
+
+#   TODO Add file Dcryption.
+def read_json(item):
+    ''' reads a json file with login credentials '''
+    if os.path.isfile('data.json'):
+        with open('data.json', 'r') as f:
+            data = json.load(f)
+            for line in data['credentials']:
+                return line[item]
+
+
 if __name__ == '__main__':
     item = False
     hostname = socket.gethostname()
-    if os.path.isfile('config.py'):
-        import config
+    if os.path.isfile('data.json'):
         try:
-            print(f"Attempting to login as {config.login} on {hostname}")
-            client = MongoClient(config.credentials)
+            print(f"Attempting to login as {read_json('login')} on {hostname}")
+            client = MongoClient(read_json('uri'))
             db = client.movoda
-            prices = db.prices
+            prices = db.pricess
             locations = db.locations
             users = db.users
             for item in users.find({}): # just brain farting... 
                 item = True
         except Exception as e:
             print('Credientials invalid...')
-            os.remove('config.py')
+            os.remove('data.json')
     else:
         print('Missing Credientials.')
         user = input('Enter username: ')
         password = input('Enter password: ')
-        with open('config.py', 'w') as f:
-            loginCreds = f'credentials = "mongodb://{user}:{password}@cluster0-shard-00-00-ltipa.gcp.mongodb.net:27017/movoda?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority"\nlogin = "{user}"'
-            f.write(loginCreds)
+        write_json(user, password)
         print('Restart to login')
     if item == True:
         menuSystem()
