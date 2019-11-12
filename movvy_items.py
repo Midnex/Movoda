@@ -3,6 +3,7 @@ import json
 import os.path
 import pyperclip
 import socket
+from cryptography.fernet import Fernet
 from datetime import datetime
 from tabulate import tabulate
 from pymongo import MongoClient
@@ -103,7 +104,7 @@ def database_reader_new(searchQuery, queryItemType, term):
 def database_writer_new(line_to_write):
     '''writes to mongodb using data in line_to_write (list)'''
     timestamp, location, clan, queryItemType, item, price, store, login, hostname = line_to_write
-    data = {'timestamp': timestamp,'location': location,'clan': clan,'type': queryItemType,'item': item,'price': price,'store': store, 'login':config.login, 'source':hostname}
+    data = {'timestamp': timestamp,'location': location,'clan': clan,'type': queryItemType,'item': item,'price': price,'store': store, 'login':read_json('login'), 'source':hostname}
     result = prices.insert_one(data)
 
 
@@ -145,7 +146,7 @@ def clipboard_finder_parse():
             building_item = getPrice(building_type, line)
             building_item_price = line.split(' for ')[1].split(' in ')[0].strip()[:-1]
             building_name = line.split(' in ')[1].strip()
-            line_to_write = [stamp, building_location, building_clan,building_type, building_item, building_item_price, building_name, config.login, hostname]
+            line_to_write = [stamp, building_location, building_clan, building_type, building_item, building_item_price, building_name, read_json('login'), hostname]
             database_writer_new(line_to_write)
             count += 1
         except:
@@ -187,7 +188,7 @@ def clipboard_store_parse():
                 building_price = line.split(sell_sep)[1].replace('V', '').replace(',', '').strip()
                 building_type = 'sell'
             if building_type != '':
-                line_to_write = [stamp, location, clan, building_type, building_item, building_price, building_name, config.login, hostname]
+                line_to_write = [stamp, location, clan, building_type, building_item, building_price, building_name, read_json('login'), hostname]
                 database_writer_new(line_to_write)
         count += 1
     print(f'Added {count} items at {stamp} from {location} - {clan} - {building_name}\n')
@@ -231,6 +232,12 @@ def read_json(item):
             data = json.load(f)
             for line in data['credentials']:
                 return line[item]
+
+def fileEncrypt():
+    pass
+
+def fileDecrypt():
+    pass
 
 
 if __name__ == '__main__':
