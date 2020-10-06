@@ -1,7 +1,5 @@
 *.csv
-config.py
-__pycache__/config.cpython-37.pyc
 *.pyc
-*.txt
+config.py
+.vscode
 data.json
-decryption.py
