@@ -3,7 +3,7 @@ import json
 import os.path
 import pyperclip
 import socket
-from cryptography.fernet import Fernet
+# from cryptography.fernet import Fernet
 from datetime import datetime
 from tabulate import tabulate
 from pymongo import MongoClient
