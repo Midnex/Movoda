@@ -1,4 +1,3 @@
-import csv
 import json
 import os.path
 import pyperclip
@@ -248,11 +247,9 @@ if __name__ == '__main__':
             print(f"Attempting to login as {read_json('login')} on {hostname}")
             client = MongoClient(read_json('uri'))
             db = client.movoda
-            prices = db.pricess
+            prices = db.prices
             locations = db.locations
             users = db.users
-            for item in users.find({}): # just brain farting... 
-                item = True
         except Exception as e:
             print('Credientials invalid...')
             os.remove('data.json')
@@ -262,5 +259,4 @@ if __name__ == '__main__':
         password = input('Enter password: ')
         write_json(user, password)
         print('Restart to login')
-    if item == True:
-        menuSystem()
+    menuSystem()
