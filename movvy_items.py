@@ -7,7 +7,7 @@ from datetime import datetime
 from tabulate import tabulate
 from pymongo import MongoClient
 
-ver = '0.64' #  TODO Add version to dabase and build a check, force upgrade.
+ver = '0.64' #  TODO Add version to database and build a check, force upgrade.
 
 def menuSystem():
     print('Movoda Utils:')
@@ -75,19 +75,19 @@ def database_reader_new(searchQuery, queryItemType, term):
     searchQuery = ''.join(searchQuery)
     if term == 'store':
         for i in prices.find({'store': searchQuery}):
-            table = i['timestamp'], i['location'], i['clan'], i['type'], i['item'], int(i['price']), i['store']
+            table = i['timestamp'], i['location'], i['clan'], i['type'], i['item'], int(i['price'].replace(",","")), i['store']
             data.append(table)
     elif term == 'item':
         for i in prices.find({'item': searchQuery}):
             if i['type'] == queryItemType.lower():
-                table = i['timestamp'], i['location'], i['clan'], i['type'], i['item'], int(i['price']), i['store']
+                table = i['timestamp'], i['location'], i['clan'], i['type'], i['item'], int(i['price'].replace(",","")), i['store']
                 data.append(table)
             elif queryItemType == 'both':
-                table = i['timestamp'], i['location'], i['clan'], i['type'], i['item'], int(i['price']), i['store']
+                table = i['timestamp'], i['location'], i['clan'], i['type'], i['item'], int(i['price'].replace(",","")), i['store']
                 data.append(table)
     elif term == 'location':
         for i in prices.find({'location': searchQuery}):
-            table = i['timestamp'], i['location'], i['clan'], i['type'], i['item'], int(i['price']), i['store']
+            table = i['timestamp'], i['location'], i['clan'], i['type'], i['item'], int(i['price'].replace(",","")), i['store']
             data.append(table)
     if len(data) == 0:
         print(f"No result found for {searchQuery}.\n")
@@ -135,15 +135,15 @@ def clipboard_finder_parse():
         try:
             if len(line.split(' results for ')) == 2:
                 item = line.split(' results for ')[1]
+            stamp = datetime.now().strftime("%m/%d/%y %H:%M:%S")
         except:
             pass
-        stamp = datetime.now().strftime("%m/%d/%y %H:%M:%S")
         try:
             building_location = line.split('-')[0].strip()
             building_clan = line.split('-')[1].split(' is ')[0].strip()
             building_type = checkBuildingType(line)
             building_item = getPrice(building_type, line)
-            building_item_price = line.split(' for ')[1].split(' in ')[0].strip()[:-1]
+            building_item_price = line.split(' for ')[1].split(' in ')[0].strip()[:-1].replace(",","")
             building_name = line.split(' in ')[1].strip()
             line_to_write = [stamp, building_location, building_clan, building_type, building_item, building_item_price, building_name, read_json('login'), hostname]
             database_writer_new(line_to_write)
@@ -218,12 +218,11 @@ def write_json(user,password):
     data['credentials'] = []
     data['credentials'].append({
         'login': user,
-        'uri': f'mongodb://{user}:{password}@cluster0-shard-00-00-ltipa.gcp.mongodb.net:27017/movoda?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority'})
+        'uri': f'mongodb+srv://{user}:{password}@cluster0.ltipa.gcp.mongodb.net/movoda?retryWrites=true&w=majority'})
     with open('data.json','w') as f:
         json.dump(data,f)
 
-
-#   TODO Add file Dcryption.
+#   TODO Add file Decryption.
 def read_json(item):
     ''' reads a json file with login credentials '''
     if os.path.isfile('data.json'):
@@ -250,13 +249,16 @@ if __name__ == '__main__':
             prices = db.prices
             locations = db.locations
             users = db.users
-        except Exception as e:
-            print('Credientials invalid...')
+            for item in users.find({}): # just brain farting... 
+                item = True
+        except Exception:
+            print('Credentials invalid...')
             os.remove('data.json')
     else:
-        print('Missing Credientials.')
+        print('Missing Credentials.')
         user = input('Enter username: ')
         password = input('Enter password: ')
         write_json(user, password)
         print('Restart to login')
-    menuSystem()
+    if item == True:
+        menuSystem()

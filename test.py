@@ -1,28 +1,67 @@
-import json
-import os.path
+import csv
+from os import name
+from dearpygui.core import *
+from dearpygui.simple import *
+import sys
 
-def write_json(user,password):
-    data = {}
-    data['credentials'] = []
-    data['credentials'].append({
-        'login': user,
-        'uri': f'mongodb://{user}:{password}@cluster0-shard-00-00-ltipa.gcp.mongodb.net:27017/movoda?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority"\nlogin = {user}'})
-    with open('data.json','w') as f:
-        json.dump(data,f)
+ver = 0.2
 
-def read_json():
-    if os.path.isfile('data.json'):
-        with open('data.json','r') as f:
-            data = json.load(f)
-            for line in data['credentials']:
-                return line['login']
+def convertFile(directory, file):
+    with open(f"{directory}\\_conv{file.upper()}", "w") as w:
+        w.write("ref,split,sku,qty,status,transType,shipTo,customer\n")
+        with open(f"{directory}\\{file}", "r") as f:
+            for line in csv.DictReader(f):
+                if 'AllocationStatus' in line.keys():
+                    orgRef = line['ReferenceNum'].split('-')[0]
+                    split = line['ReferenceNum']
+                    status = line['AllocationStatus']
+                    skuList = line['SkuAndQty']
+                    transType = 'Order'
+                    shipTo = line['ShipToCompany']
+                    customer = ''
+                elif 'StatusEnum' in line.keys():
+                    orgRef = line['ReferenceNum']
+                    split = ''
+                    status = line['StatusEnum']
+                    skuList = line['Skus']
+                    transType = 'Receipt'
+                    shipTo = 'OISI'
+                    customer = line['Customer']
+                else:
+                    print(f"{file} does not contain AllocationStatus or StatusEnum fields\nField(s) are required to process.")
+                    break
+                if orgRef == "" or status == 'No Line Items' or status == 'Canceled':
+                    pass
+                else:
+                    for item in skuList.split(","):
+                        sku = item.split("(")[0]
+                        qty = item.split("(")[1].replace(")","")
+                        w.write(f"{orgRef},{split},{sku},{qty},{status},{transType},{shipTo},{customer}\n")
+    sys.exit()
 
+def file(sender, data):
+    open_file_dialog(callback=apply_selected_file, extensions=".csv")
 
-if os.path.isfile('data.json'):
-    print('check')
-    print(read_json())
-else:
-    user = input()
-    password = input()
+def apply_selected_file(sender, data):
+    directory = data[0]
+    filename = data[1]
+    set_value("file", filename)
+    convertFile(directory, filename)
 
-    write_json(user, password)
+def main():
+    set_main_window_size(600, 650)
+    set_main_window_resizable(False)
+    set_main_window_title(f"OrderGridExport Split v{ver}")
+    with window("main"):
+        file("main",None)
+        add_text("File: ")
+        add_same_line()
+        add_label_text("##file", source="file", color=[255, 0, 0])
+    start_dearpygui(primary_window="main")
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        file = sys.argv[1]
+        convertFile(file)
+    else:
+        main()
