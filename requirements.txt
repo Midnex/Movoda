@@ -1,4 +1,11 @@
 pymongo==3.11.3
 tabulate==0.8.9
 requests==2.25.1
+<<<<<<< HEAD
 pyperclip==1.8.2
+=======
+pyperclip==1.8.2
+config==0.5.0.post0
+lxml==4.6.3
+selenium==3.141.0
+>>>>>>> 3d39d1a2ee418245e31ee3516e9d2cae9a0e08c1
