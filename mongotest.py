@@ -10,9 +10,8 @@ locations = db.locations
 users = db.users
 
 
-search = prices.find({ "price": {"$regex" : ".*,.*"}})
+search = prices.find({"price": {"$regex": ".*,.*"}})
 
 
 for i in search:
     print(i)
-
