@@ -1,4 +1,4 @@
-lxml==4.7.1
+lxml==4.9.1
 pymongo==4.0.1
 pyperclip==1.8.2
 requests==2.26.0
